@@ -1,0 +1,286 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ResoucesMngModelInUnity | Turok's Laputa</title><meta name="author" content="Turok"><meta name="copyright" content="Turok"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="目录 引言 问题与解决过程 总结    引言读者，欢迎来到这一篇文章，你发现了吧 :) ，这一章采用了新的排版，希望你能够喜欢。这篇文章标题叫做**“Resources Mng Model In Unity”**，即Unity中的资源管理器模块。在本文，我会介绍Unity中如何动态地加载资源，而不是像以往一样用手拖动资源。    重在尝试，放手去做吧，少年！    问题与解决过程 Q1: Unit">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ResoucesMngModelInUnity">
+<meta property="og:url" content="https://turokfang.top/2026/05/09/ResourcesMngModelInUnity/ResourcesMngModelInUnity/index.html">
+<meta property="og:site_name" content="Turok&#39;s Laputa">
+<meta property="og:description" content="目录 引言 问题与解决过程 总结    引言读者，欢迎来到这一篇文章，你发现了吧 :) ，这一章采用了新的排版，希望你能够喜欢。这篇文章标题叫做**“Resources Mng Model In Unity”**，即Unity中的资源管理器模块。在本文，我会介绍Unity中如何动态地加载资源，而不是像以往一样用手拖动资源。    重在尝试，放手去做吧，少年！    问题与解决过程 Q1: Unit">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://turokfang.top/img/Turok_Compressed.png">
+<meta property="article:published_time" content="2026-05-09T10:14:16.000Z">
+<meta property="article:modified_time" content="2026-05-10T08:52:51.149Z">
+<meta property="article:author" content="Turok">
+<meta property="article:tag" content="Frame">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://turokfang.top/img/Turok_Compressed.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ResoucesMngModelInUnity",
+  "url": "https://turokfang.top/2026/05/09/ResourcesMngModelInUnity/ResourcesMngModelInUnity/",
+  "image": "https://turokfang.top/img/Turok_Compressed.png",
+  "datePublished": "2026-05-09T10:14:16.000Z",
+  "dateModified": "2026-05-10T08:52:51.149Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Turok",
+      "url": "https://turokfang.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://turokfang.top/2026/05/09/ResourcesMngModelInUnity/ResourcesMngModelInUnity/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ResoucesMngModelInUnity',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div class="bg-animation" id="web_bg" style="background-color: #FAF9DE;"></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/Website_Top_Image_Review_Compressed.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/Website_Logo_Beta_Preview_Compressed.png" alt="Logo"><span class="site-name">Turok's Laputa</span></a><a class="nav-page-title" href="/"><span class="site-name">ResoucesMngModelInUnity</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">ResoucesMngModelInUnity</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-09T10:14:16.000Z" title="发表于 2026-05-09 18:14:16">2026-05-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-10T08:52:51.149Z" title="更新于 2026-05-10 16:52:51">2026-05-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Unity/">Unity</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h4 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h4><ul>
+<li><em>引言</em></li>
+<li><em>问题与解决过程</em></li>
+<li><em>总结</em></li>
+</ul>
+<hr>
+<hr>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p><font color="red">读者</font>，欢迎来到这一篇文章，你发现了吧 :) ，这一章采用了新的排版，希望你能够喜欢。<br>这篇文章标题叫做**“Resources Mng Model In Unity”**，即Unity中的资源管理器模块。在本文，我会介绍Unity中如何动态地加载资源，而不是像以往一样用手拖动资源。  </p>
+<blockquote>
+<p>重在尝试，放手去做吧，少年！</p>
+</blockquote>
+<hr>
+<hr>
+<h2 id="问题与解决过程"><a href="#问题与解决过程" class="headerlink" title="问题与解决过程"></a>问题与解决过程</h2><blockquote>
+<p>Q1: Unity里，如何动态加载资源？<br>A: 在这之前，我先告诉你一个重要文件夹，<strong>Resources</strong>文件夹，这个文件夹需要自己在项目工程中手动创建，文件夹里的内容有以下特点：</p>
+<ol>
+<li>可以用<code>Resources</code>API加载；</li>
+<li>打包时会压缩；</li>
+<li>打包时还会加密；</li>
+<li>打包后只可读，可以用<code>Resouces</code>API加载。</li>
+</ol>
+<p><font color="red">简单来讲，这个文件夹的内容可以被我们用<code>Resouces</code>API动态加载出来供我们使用。</font></p>
+</blockquote>
+<blockquote>
+<p>Q2: 有哪些常用资源文件？<br>A: 像GameObject、AudioClip、TextAsset和Texture等都是常用的，预制体就是GameObject类型，音频文件就是AudoClip类型，文本文件就是TextAsset类型，纹理图片就是Texture类型。</p>
+</blockquote>
+<blockquote>
+<p>Q3: 这个API怎么用？<br>A: 你可以查阅文档，Unity文档页面[Unity Resources内容](<a target="_blank" rel="noopener" href="https://docs.unity.cn/ScriptReference/Resources.html">Unity - Scripting API: Resources</a>)</p>
+</blockquote>
+<p><img src="/.top//Resources.webp" alt="Resources"></p>
+<center>我圈起来的就是在本文中用到的API</center>
+
+<p>我主要介绍同步加载资源与异步加载资源的流程。  </p>
+<hr>
+<h3 id="同步加载"><a href="#同步加载" class="headerlink" title="同步加载"></a>同步加载</h3><p>步骤一般都是：</p>
+<ol>
+<li>用<code>Resources.Load&lt;T&gt;(string path)</code>加载资源；<blockquote>
+<p>用泛型重载的原因是减少装箱拆箱操作。</p>
+</blockquote>
+</li>
+<li>用<code>T</code>类型变量存储加载的资源；</li>
+<li>使用。</li>
+</ol>
+<p>其中有点特殊的是GameObject类型资源。我们需要将其加载到场景中，因此对于GameObject类型资源，应该：</p>
+<ol>
+<li>用<code>Resources.Load&lt;T&gt;(string path)</code>加载资源；</li>
+<li>用<code>T</code>类型变量存储加载的资源；</li>
+<li>使用<code>Instantiate()</code>实例化GameObject类型资源。</li>
+</ol>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//生命周期函数，在开始前一帧执行</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Start</span>()</span> </span><br><span class="line">&#123;</span><br><span class="line">	GameObject obj = Resources.Load&lt;GameObject&gt;(<span class="string">&quot;路径&quot;</span>);</span><br><span class="line">	Instantiate(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：路径要求使用正斜杠<code>/</code>，路径名中不要包含文件的后缀，比如.prefab，.txt，可以直接填资源的名字，Unity会在子文件夹找资源。如果在Resources文件夹里有两个子文件夹，而且两个子文件夹中有同名资源，那么请保证路径名完整，不然你不知道加载的是哪个文件。</p>
+</blockquote>
+<hr>
+<h3 id="异步加载"><a href="#异步加载" class="headerlink" title="异步加载"></a>异步加载</h3><p>异步加载有两种方式，<font color="red"><b>直接使用API和利用协程间接异步加载</b></font>。  </p>
+<h4 id="直接使用API"><a href="#直接使用API" class="headerlink" title="直接使用API"></a>直接使用API</h4><p>上图中，API返回值类型是什么？——<code>ResourceRequest</code>。在编辑器中按F12查看定义，</p>
+<p><img src="/.top//ResourceRequest.webp" alt="ResourceRequest"></p>
+<center>返回值里有一个<code>asset</code>属性</center>
+
+<p>这个属性就是我们拿资源的地方。<code>ResourceRequest</code>可以看作一个<font color="red">回应</font>，回应<code>Resources.LoadAsync()</code>，在这个回应里就有我们要的资源。但是这个资源是<code>Object</code>类型的，因此我们需要将其转换为我们需要的类型才能够使用。 </p>
+<p><img src="/.top//AsyncOperation.webp" alt="AsyncOperation"></p>
+<center><code>ResourceRequest</code>继承的类</center>
+
+<p>里面有一个<code>completed</code>事件，这个事件其实就是资源加载完后执行的事件。<br>还有一个<code>isDone</code>属性，表示加载过程有没有结束。<br><code>progress</code>属性，表示的是当前的加载进度。<br>代码展示如何使用这种方式进行异步加载资源（非泛型版本）：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//生命周期函数，在开始前一帧执行</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//非泛型版本</span></span><br><span class="line">	ResourceRequest  request = Resources.LoadAsync(<span class="string">&quot;路径&quot;</span>);</span><br><span class="line">	<span class="comment">//假设目标类型是GameObject类型</span></span><br><span class="line">	GameObject obj = request.asset <span class="keyword">as</span> GameObject;</span><br><span class="line">	<span class="comment">//别忘了GameObject类型有点特殊，需要实例化到场景中</span></span><br><span class="line">	GameObject.Instantiate(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码展示如何使用这种方式进行异步加载资源（泛型版本）：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//生命周期函数，在开始前一帧执行</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//泛型版本</span></span><br><span class="line">	ResourceRequest  request = Resources.LoadAsync&lt;GameObject&gt;(<span class="string">&quot;路径&quot;</span>);</span><br><span class="line">	<span class="comment">//假设目标类型是GameObject类型，非泛型版本无需进行类型转换，已经在内部处理好了</span></span><br><span class="line">	GameObject obj = request.asset;</span><br><span class="line">	<span class="comment">//别忘了GameObject类型有点特殊，需要实例化到场景中</span></span><br><span class="line">	GameObject.Instantiate(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>插入：Q4: 为啥要用异步加载？<br>A：同步加载都会在一帧里执行加载逻辑，然后当前帧就能获得资源，但是如果要加载的资源特别大呢？这时候资源要加载的时间就变长了，如果你是帧数很高，说明<strong>每一帧的时间间隔很短</strong>，这样一来这一帧做不完的事情就要用到很多帧，就会造成卡顿。因此使用<strong>异步加载</strong>的方式，缓解卡顿，但是不知道何时能够获得资源。<br>Q5：怎么知道已经获得资源并可以使用它了呢？<br>A：<strong>读者</strong>，还记得介绍的<code>isDone</code>属性吗？</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//了解何时获得了资源</span></span><br><span class="line"><span class="comment">//生命周期函数，在开始前一帧执行</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">	ResourceRequest  request = Resources.LoadAsync&lt;GameObject&gt;(<span class="string">&quot;路径&quot;</span>);</span><br><span class="line">	<span class="keyword">while</span>(!request.isDone)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//只要没完成就在这里</span></span><br><span class="line">		<span class="comment">//还记得progress吗</span></span><br><span class="line">		<span class="comment">//可以用这个实时显示加载进度</span></span><br><span class="line">		Debug.Log(<span class="string">&quot;当前加载进度为：&#123;0&#125;&quot;</span>, request.progress);</span><br><span class="line">	&#125;</span><br><span class="line">	GameObject obj = request.asset;</span><br><span class="line">	GameObject.Instantiate(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="协程间接异步加载资源"><a href="#协程间接异步加载资源" class="headerlink" title="协程间接异步加载资源"></a>协程间接异步加载资源</h3><p>这种方式更常用、更灵活。可以在加载资源完毕后做一些事情。我在这里默认<font color="red">读者</font>你已经接触过协程相关内容。<br>过程：</p>
+<ol>
+<li>首先声明一个协程函数；</li>
+<li>在协程函数中异步加载资源；</li>
+<li>外部开启协程。</li>
+</ol>
+<p>代码如下：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//协程函数</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> IEnumerator <span class="title">LoadRes</span>(<span class="params"><span class="built_in">string</span> path</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//假设我要加载的是一个GameObject类型对象</span></span><br><span class="line">	ResourceRequest request = Resources.LoadAsync&lt;GameObject&gt;(name);</span><br><span class="line">	<span class="keyword">yield</span> <span class="keyword">return</span> request;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>yield return request</code>！Q6: 为什么能够这样使用？<br>A: 哈哈哈，读者，请往上看图片，你记得吗？<code>ResourceRequest</code>的父类是<code>AsyncOperation</code>，<code>AsyncOperation</code>的父类是<code>YieldInstruction</code>，没错，正是<code>YieldInstruction</code>类，<code>yield return</code>语句后接上一个继承自该类的对象，会告诉Unity协程函数什么时候继续执行代码。在这里，Unity协程函数会在<code>request</code>已经加载完后继续执行下面的代码。</p>
+</blockquote>
+<blockquote>
+<p>Q7: 我怎么操作对象呢？<br>A: 听说过<strong>回调函数</strong>吗，用这个把资源传出去操作。</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//协程函数</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> IEnumerator <span class="title">LoadRes</span>&lt;<span class="title">T</span>&gt;(<span class="params"><span class="built_in">string</span> path, UnityAction&lt;T&gt; callback</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//假设我要加载的是一个GameObject类型对象</span></span><br><span class="line">	ResourceRequest request = Resources.LoadAsync&lt;GameObject&gt;(name);</span><br><span class="line">	<span class="keyword">yield</span> <span class="keyword">return</span> request;</span><br><span class="line">	callback(request);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//生命周期函数，在开始前一帧执行</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">	StartCoroutine(LoadRes&lt;GameObject&gt;(<span class="string">&quot;路径&quot;</span>,(GameObject obj)=&gt;&#123;</span><br><span class="line">		<span class="comment">//对参数做一些事情</span></span><br><span class="line">		GameObject.Instantiate&lt;GameObject&gt;(obj);</span><br><span class="line">	&#125;));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看到这里，读者你已经明白了如何使用<code>Resources</code>中的API加载资源了。接下来我将介绍一个资源加载模块，提供给外部加载资源。  </p>
+<p>分析一下资源加载模块需要具备的功能：</p>
+<ol>
+<li>同步加载资源</li>
+<li>异步加载资源</li>
+</ol>
+<p>OK，接下来我将逐步完善一个资源加载模块，</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//资源加载模块：BaseMng&lt;T&gt;是之前实现的单例模式基类</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ResMng</span> : <span class="title">BaseMng</span>&lt;<span class="title">ResMng</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//同步加载资源</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">Load</span>&lt;<span class="title">T</span>&gt;(<span class="params"><span class="built_in">string</span> path</span>)</span></span><br><span class="line">	&#123;</span><br><span class="line">		T res = Resources.Load&lt;T&gt;(path);</span><br><span class="line">		<span class="comment">//因为GameObject类型资源需要实例化到场景中</span></span><br><span class="line">		<span class="keyword">if</span>(res <span class="keyword">is</span> GameObject)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="comment">//这里需要注意，我们创建了一个副本引用实例化的资源</span></span><br><span class="line">			GameObject obj = Instantiate(res <span class="keyword">as</span> GameObject);</span><br><span class="line">			<span class="keyword">return</span> obj <span class="keyword">as</span> T;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q8: 为什么创建了一个副本引用实例化的资源呢？<br>A: 读者，我很高兴能为你解释这个问题，我在开发过程中遇到了一个问题，和这个相关。我用资源加载模块加载了一个<strong>预制体对象</strong>，我通过回调函数把这个对象给外部使用，我在外部修改这个对象的时候，报错了——我修改的是<strong>Transform</strong>组件，给这个预制体对象一个父节点，报错显示**“为了避免数据冲突，在预制体中的Transform组件不能被设置”<strong>。重点在</strong> <code>Resources.Load&lt;GameObject&gt;()</code>和<code>Resources.LoadAsync&lt;GameObject&gt;()</code>，前者返回的是预制体对象 ，后者返回的 **<code>asset</code>中存的也是预制体对象，我们修改相当于修改预制体了，所以我们要创建一个副本，返回的也是这个副本。意思就是我们修改的是实例化后的副本，而不是预制体本身（会有冲突）。  </p>
+</blockquote>
+<p>好的，我们继续完善异步加载资源的方法：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//资源加载模块：BaseMng&lt;T&gt;是之前实现的单例模式基类</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ResMng</span> : <span class="title">BaseMng</span>&lt;<span class="title">ResMng</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//同步加载资源</span></span><br><span class="line">	......</span><br><span class="line"></span><br><span class="line">	<span class="comment">//异步加载资源</span></span><br><span class="line">	<span class="comment">//callback是回调函数，把加载好的资源给外部处理的</span></span><br><span class="line">	<span class="comment">//之所以不需要返回值，因为资源并不一定是在这一帧返回的，这归于异步加载，这也是我们使用回调函数交给外部处理资源的原因</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">LoadAsync</span>&lt;<span class="title">T</span>&gt;(<span class="params"><span class="built_in">string</span> path, UnityAction&lt;T&gt; callback</span>)</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//由于我们这个类没有继承MonoBehaviour，需要使用到公共Mono模块</span></span><br><span class="line">		MonoMng.GetInstance().StartCoroutine(path,callback);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//协程函数</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> IEnumerator <span class="title">RLoadAsync</span>&lt;<span class="title">T</span>&gt;(<span class="params"><span class="built_in">string</span> path, UnityAction&lt;T&gt; callback</span>)</span></span><br><span class="line">	&#123;</span><br><span class="line">		ResourceRequest request = Resources.LoadAsync&lt;T&gt;(path);</span><br><span class="line">		<span class="keyword">yield</span> <span class="keyword">return</span> request;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(request.asset <span class="keyword">is</span> GameObject)</span><br><span class="line">		&#123;</span><br><span class="line">			GameObject obj = GameObject.Instantiate(request.asset <span class="keyword">as</span> GameObject);</span><br><span class="line">			callback(obj <span class="keyword">as</span> T);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			callback(obj <span class="keyword">as</span> T);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q9: 异步加载资源时，如果是一个预制体GameObject，我可以给他一个名字吗，方便找？<br>A: 当然可以，这是一个明智的决定。你只需要在代码中添加：</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obj.name = path;</span><br></pre></td></tr></table></figure>
+<p>或者你可以制定一套自己的命名规则。<br>这样一来，我们的资源管理模块就完成了:)</p>
+<hr>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>资源管理模块的功能是为了封装好API，供外部使用，快速加载资源，减少一些重复的工作，如实例化预制体，绑定音频文件等。<br>资源管理模块具备：</p>
+<ol>
+<li>同步加载资源，加载较小的资源；</li>
+<li>异步加载资源，加载较大的资源。</li>
+</ol>
+<p>要注意的坑：</p>
+<ol>
+<li>加载预制体时，需要创建一个GameObject副本存储实例化的对象，对这个副本进行修改，不然会修改预制体；</li>
+<li>回调函数的使用，因为异步加载资源不会在同一帧就把资源交给我们，所以需要等资源加载完毕后交给外部处理，就使用了回调函数。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://turokfang.top">Turok</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://turokfang.top/2026/05/09/ResourcesMngModelInUnity/ResourcesMngModelInUnity/">https://turokfang.top/2026/05/09/ResourcesMngModelInUnity/ResourcesMngModelInUnity/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://turokfang.top" target="_blank">Turok's Laputa</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Frame/">Frame</a></div><div class="post-share"><div class="social-share" data-image="/img/Turok_Compressed.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/05/08/UnityFrame/EventCenterModelInUnity/" title="EventCenterModelInUnity"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">EventCenterModelInUnity</div></div><div class="info-2"><div class="info-item-1">Event Center Model In Unity这篇文章将在Unity中实现事件中心模块，在此之前我先引入一个情境：当玩家打败Boss时，Boss会掉落物品、同时会播放玩家胜利动画、如果是第一次击败Boss还会进行成就播报、NPC会为你庆祝（甚至开一场party)……    Q1：天啊！这么多的事情！？？！弓虽！是我的话要在好多个脚本中写上好多好多逻辑，我还会为怪物、玩家、成就、NPC添加一堆状态，这样让除自己之外的脚本也知道自己发生了什么改变，想想就头疼……A：无需担心！读者，或许我该称呼你为元读者？本文就是告诉你解耦的方式的。:)Q2：作者，哦不，元作者，解耦是啥？A：解耦，用我的话说，就是把莲藕的丝切断，如果能弄干净就好了，不然吃莲藕的时候还得吃一脸丝。在程序里，就是各个脚本负责某个特定功能，不要插足别的事情，到时候在脚本间的决策阶段会很麻烦，脚本和脚本打架，就像《千与千寻》中锅炉爷爷说的”不要抢走别人的工作“，哈哈哈，跑题了。A：在此之前，我将介绍一下观察者模式，在我上面举的例子当中，有怪物、成就、玩家和NPC，其中一个部分发生变化，其他的部分也要发生改变。这时，我...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/05/06/UnityFrame/SingletonModelInUnity/" title="Singleton Model In Unity"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-06</div><div class="info-item-2">Singleton Model In Unity</div></div><div class="info-2"><div class="info-item-1">Unity中的单例模式如何实现一个单例模式基类？我们知道单例类需要具备这些东西：    全局唯一的实例 提供给外部的访问点  单例模式类一般是在整个生命周期中唯一的，用于管理的类。   在这里，我将介绍一个最简单的单例模式基类，以后可以直接继承该基类以实现单例模式。   1234567891011121314public class BaseMng&lt;T&gt;  where T: new()&#123;	//唯一实例    private static T instance;	//提供给外部的访问点    public static T GetInstance()    &#123;        if(instance == null)        &#123;            instance = new T();        &#125;        return instance;    &#125;&#125;   Q1：在Unity中，只有继承了MonoBehaviour的类才能绑定在对象上，这不就意味着继承这个基类的单例模式类不能绑定在对象上吗？A...</div></div></div></a><a class="pagination-related" href="/2026/05/08/UnityFrame/EventCenterModelInUnity/" title="EventCenterModelInUnity"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-08</div><div class="info-item-2">EventCenterModelInUnity</div></div><div class="info-2"><div class="info-item-1">Event Center Model In Unity这篇文章将在Unity中实现事件中心模块，在此之前我先引入一个情境：当玩家打败Boss时，Boss会掉落物品、同时会播放玩家胜利动画、如果是第一次击败Boss还会进行成就播报、NPC会为你庆祝（甚至开一场party)……    Q1：天啊！这么多的事情！？？！弓虽！是我的话要在好多个脚本中写上好多好多逻辑，我还会为怪物、玩家、成就、NPC添加一堆状态，这样让除自己之外的脚本也知道自己发生了什么改变，想想就头疼……A：无需担心！读者，或许我该称呼你为元读者？本文就是告诉你解耦的方式的。:)Q2：作者，哦不，元作者，解耦是啥？A：解耦，用我的话说，就是把莲藕的丝切断，如果能弄干净就好了，不然吃莲藕的时候还得吃一脸丝。在程序里，就是各个脚本负责某个特定功能，不要插足别的事情，到时候在脚本间的决策阶段会很麻烦，脚本和脚本打架，就像《千与千寻》中锅炉爷爷说的”不要抢走别人的工作“，哈哈哈，跑题了。A：在此之前，我将介绍一下观察者模式，在我上面举的例子当中，有怪物、成就、玩家和NPC，其中一个部分发生变化，其他的部分也要发生改变。这时，我...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/Turok_Compressed.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Turok</div><div class="author-info-description">Roses are red;
+<br>
+Violets are blue;
+<br>
+I hope your all day is doing good. :)
+</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/TurokFang-gamer/turokfang.github.io.git"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">2.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E8%BF%87%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">问题与解决过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E5%8A%A0%E8%BD%BD"><span class="toc-number">3.1.</span> <span class="toc-text">同步加载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD"><span class="toc-number">3.2.</span> <span class="toc-text">异步加载</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8API"><span class="toc-number">3.2.1.</span> <span class="toc-text">直接使用API</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%8F%E7%A8%8B%E9%97%B4%E6%8E%A5%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD%E8%B5%84%E6%BA%90"><span class="toc-number">3.3.</span> <span class="toc-text">协程间接异步加载资源</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/09/ResourcesMngModelInUnity/ResourcesMngModelInUnity/" title="ResoucesMngModelInUnity">ResoucesMngModelInUnity</a><time datetime="2026-05-09T10:14:16.000Z" title="发表于 2026-05-09 18:14:16">2026-05-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/08/UnityFrame/EventCenterModelInUnity/" title="EventCenterModelInUnity">EventCenterModelInUnity</a><time datetime="2026-05-08T05:31:39.000Z" title="发表于 2026-05-08 13:31:39">2026-05-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/06/UnityFrame/SingletonModelInUnity/" title="Singleton Model In Unity">Singleton Model In Unity</a><time datetime="2026-05-06T05:36:32.000Z" title="发表于 2026-05-06 13:36:32">2026-05-06</time></div></div></div></div></div></div></main><footer id="footer" style="background-color: #002FA7;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Turok</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5-b1"></script><script src="/js/main.js?v=5.5.5-b1"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
