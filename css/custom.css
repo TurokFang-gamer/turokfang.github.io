@@ -12,3 +12,16 @@
   --hr-border: #333333;    /* 暗色分割线 */
 }
 
+body {
+    font-size: 18px;
+}
+
+#article-container {
+    font-size: 1.1rem;
+    line-height: 1.9;
+}
+
+#article-container code {
+    font-size: 0.95em;
+}
+
